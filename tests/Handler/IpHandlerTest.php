@@ -69,7 +69,7 @@ final class IpHandlerTest extends BaseTestCase
         yield ['193.0.11.51', 'inetnum:        193.0.10.0 - 193.0.11.255', 'whois.ripe.net'];
         yield ['200.3.13.10', 'inetnum:     200.3.12.0/22', 'whois.lacnic.net'];
         yield ['196.216.2.1', 'inetnum:        196.216.2.0 - 196.216.3.255', 'whois.afrinic.net'];
-        yield ['192.72.254.0', 'NetHandle:      NET-192-72-254-0-1', 'whois.arin.net'];
+        yield ['199.212.0.46', 'NetHandle:      NET-199-212-0-0-1', 'whois.arin.net'];
     }
 
     #[DataProvider('provideRdapIpResponse')]
@@ -93,7 +93,7 @@ final class IpHandlerTest extends BaseTestCase
         yield ['193.0.11.51', '"handle" : "193.0.10.0 - 193.0.11.255"', 'https://rdap.db.ripe.net/'];
         yield ['200.3.13.10', '"handle":"200.3.12.0/22"', 'https://rdap.lacnic.net/rdap/'];
         yield ['196.216.2.1', '"handle":"196.216.2.0 - 196.216.3.255"', 'https://rdap.afrinic.net/rdap/'];
-        yield ['192.72.254.0', '"handle" : "NET-192-72-254-0-1"', 'https://rdap.arin.net/registry/'];
+        yield ['199.212.0.160', '"handle" : "NET-199-212-0-0-1"', 'https://rdap.arin.net/registry/'];
     }
 
     private static function createRdapIpServerList(): RdapIpServerList
