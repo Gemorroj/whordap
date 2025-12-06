@@ -41,7 +41,7 @@ final readonly class DomainHandler implements HandlerInterface
     public function processWhois(string $query, ?string $forceServer = null): WhoisDomainResponse
     {
         try {
-            $query = (new ToIdn())->convert($query);
+            $query = new ToIdn()->convert($query);
         } catch (AlreadyPunycodeException) {
             // $query is already a Punycode
         } catch (Algo26InvalidCharacterException $e) {
@@ -84,7 +84,7 @@ final readonly class DomainHandler implements HandlerInterface
     public function processRdap(string $query, ?string $forceServer = null): RdapDomainResponse
     {
         try {
-            $query = (new ToIdn())->convert($query);
+            $query = new ToIdn()->convert($query);
         } catch (AlreadyPunycodeException) {
             // $query is already a Punycode
         } catch (Algo26InvalidCharacterException $e) {
