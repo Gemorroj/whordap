@@ -25,7 +25,7 @@ use WhoRdap\Response\WhoisIpResponse;
 final readonly class WhoRdap
 {
     public function __construct(
-        private ?NetworkClient $networkClient = null,
+        private ?NetworkClientInterface $networkClient = null,
         private ?TldServerListInterface $whoisTldServerList = null,
         private ?AsnServerListInterface $whoisAsnServerList = null,
         private ?IpServerListInterface $whoisIpServerList = null,

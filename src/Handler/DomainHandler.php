@@ -18,7 +18,7 @@ use WhoRdap\Exception\QueryRateLimitExceededException;
 use WhoRdap\Exception\RegistrarServerException;
 use WhoRdap\Exception\TimeoutException;
 use WhoRdap\HandlerInterface;
-use WhoRdap\NetworkClient\NetworkClient;
+use WhoRdap\NetworkClientInterface;
 use WhoRdap\Response\RdapDomainRegistrarResponse;
 use WhoRdap\Response\RdapDomainResponse;
 use WhoRdap\Response\WhoisDomainRegistrarResponse;
@@ -27,7 +27,7 @@ use WhoRdap\TldServerListInterface;
 
 final readonly class DomainHandler implements HandlerInterface
 {
-    public function __construct(private NetworkClient $networkClient, private TldServerListInterface $serverList)
+    public function __construct(private NetworkClientInterface $networkClient, private TldServerListInterface $serverList)
     {
     }
 

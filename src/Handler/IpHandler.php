@@ -12,13 +12,13 @@ use WhoRdap\Exception\QueryRateLimitExceededException;
 use WhoRdap\Exception\TimeoutException;
 use WhoRdap\HandlerInterface;
 use WhoRdap\IpServerListInterface;
-use WhoRdap\NetworkClient\NetworkClient;
+use WhoRdap\NetworkClientInterface;
 use WhoRdap\Response\RdapIpResponse;
 use WhoRdap\Response\WhoisIpResponse;
 
 final readonly class IpHandler implements HandlerInterface
 {
-    public function __construct(private NetworkClient $networkClient, private IpServerListInterface $serverList)
+    public function __construct(private NetworkClientInterface $networkClient, private IpServerListInterface $serverList)
     {
     }
 

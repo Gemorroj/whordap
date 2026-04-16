@@ -12,13 +12,13 @@ use WhoRdap\Exception\NetworkException;
 use WhoRdap\Exception\QueryRateLimitExceededException;
 use WhoRdap\Exception\TimeoutException;
 use WhoRdap\HandlerInterface;
-use WhoRdap\NetworkClient\NetworkClient;
+use WhoRdap\NetworkClientInterface;
 use WhoRdap\Response\RdapAsnResponse;
 use WhoRdap\Response\WhoisAsnResponse;
 
 final readonly class AsnHandler implements HandlerInterface
 {
-    public function __construct(private NetworkClient $networkClient, private AsnServerListInterface $serverList)
+    public function __construct(private NetworkClientInterface $networkClient, private AsnServerListInterface $serverList)
     {
     }
 

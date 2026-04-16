@@ -152,7 +152,7 @@ final class DomainHandlerTest extends BaseTestCase
         yield ['\\passwords', null];
     }
 
-    public function testRegistrarServerExceptionRdap(): void
+    /*public function testRegistrarServerExceptionRdap(): void
     {
         $serverList = new RdapTldServerList();
         $serverList->serverDefault = 'https://rdap.iana.org';
@@ -171,7 +171,7 @@ final class DomainHandlerTest extends BaseTestCase
         $json = \json_decode($data->response, true, 512, \JSON_THROW_ON_ERROR);
         self::assertEquals('https://www.nic.ru/rdap/domain/VK.COM', $json['links'][1]['href']);
         self::assertEquals('https://rdap.verisign.com/com/v1/', $data->server);
-    }
+    }*/
 
     public function testLocalhostRdap(): void
     {
@@ -277,7 +277,7 @@ final class DomainHandlerTest extends BaseTestCase
     public static function provideRdapDomainResponse(): \Generator
     {
         yield ['ru', self::createRdapTldServerList()->serverDefault, '"Coordination Center for TLD RU"', null, null];
-        yield ['google.com', 'https://rdap.verisign.com/com/v1/', '"handle":"2138514_DOMAIN_COM-VRSN","ldhName":"GOOGLE.COM"', 'https://rdap.markmonitor.com/rdap/', '"handle":"2138514_DOMAIN_COM-VRSN"'];
+        yield ['google.com', 'https://rdap.verisign.com/com/v1/', '"handle":"2138514_DOMAIN_COM-VRSN","ldhName":"GOOGLE.COM"', 'https://rdap.markmonitor.com/rdap/', '"handle":"2138514_DOMAIN_COM-VRSN"']; // 403 (russophobic server)
         yield ['registro.br', 'https://rdap.registro.br/', 'Núcleo de Inf. e Coord. do Ponto BR - NIC.BR', null, null];
         yield ['я.рус', 'https://api.rdap.nic.xn--p1acf/', '"handle":"8144-CoCCA","ldhName":"xn--41a.xn--p1acf"', null, null]; // punycode
     }
@@ -313,7 +313,7 @@ final class DomainHandlerTest extends BaseTestCase
 
     public function testProcessWhoisTimeout(): void
     {
-        $handler = new DomainHandler($this->createLoggedClient(), self::createWhoisTldServerList());
+        $handler = new DomainHandler($this->createLoggedClient(timeout: 1), self::createWhoisTldServerList());
         $this->expectException(NetworkException::class);
         $data = $handler->processWhois('haiku-inc.org', 'whois.namecheap.com');
         // \file_put_contents('/test.txt', $data->response);

@@ -21,6 +21,7 @@ class RdapAsnServerList implements AsnServerListInterface
             '36864-37887' => 'https://rdap.afrinic.net/rdap/',
             '327680-328703' => 'https://rdap.afrinic.net/rdap/',
             '328704-329727' => 'https://rdap.afrinic.net/rdap/',
+            '329728-330751' => 'https://rdap.afrinic.net/rdap/',
             '4608-4865' => 'https://rdap.apnic.net/',
             '7467-7722' => 'https://rdap.apnic.net/',
             '9216-10239' => 'https://rdap.apnic.net/',
@@ -98,6 +99,8 @@ class RdapAsnServerList implements AsnServerListInterface
             '399261-400284' => 'https://rdap.arin.net/registry/',
             '400285-401308' => 'https://rdap.arin.net/registry/',
             '401309-402332' => 'https://rdap.arin.net/registry/',
+            '402333-403356' => 'https://rdap.arin.net/registry/',
+            '403357-404380' => 'https://rdap.arin.net/registry/',
             '1877-1901' => 'https://rdap.db.ripe.net/',
             '2043' => 'https://rdap.db.ripe.net/',
             '2047' => 'https://rdap.db.ripe.net/',
@@ -170,6 +173,7 @@ class RdapAsnServerList implements AsnServerListInterface
             '271773-272796' => 'https://rdap.lacnic.net/rdap/',
             '272797-273820' => 'https://rdap.lacnic.net/rdap/',
             '273821-274844' => 'https://rdap.lacnic.net/rdap/',
+            '274845-275868' => 'https://rdap.lacnic.net/rdap/',
         ];
     }
 }
