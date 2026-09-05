@@ -16,12 +16,12 @@
         "algo26-matthias/idna-convert": "^4.2.1",
         "psr/log": "^3.0.2",
         "psr/cache": "^3.0.0",
-        "symfony/polyfill-mbstring": "^1.36"
+        "symfony/polyfill-mbstring": "^1.38"
     },
     "require-dev": {
-        "phpunit/phpunit": "^13.1.5",
+        "phpunit/phpunit": "^13.3.2",
         "friendsofphp/php-cs-fixer": "^3.95",
-        "phpstan/phpstan": "^2.1.48",
+        "phpstan/phpstan": "^2.2.13",
         "symfony/console": "^7.4.8 || ^8.0.8",
         "symfony/cache": "^7.4.8 || ^8.0.8"
     },
