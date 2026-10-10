@@ -19,14 +19,14 @@ $dataAsn32 = \json_decode($jsonAsn32, true, 10, \JSON_THROW_ON_ERROR);
 echo 'Start scan ASN...'.\PHP_EOL;
 $servers = [];
 foreach ($dataAsn16 as $range => $value) {
-    if (!isset($value['host'])) {
+    if (!isset($value['host']) || '' === $value['host']) {
         continue;
     }
     $range = \str_replace(' ', '-', $range);
     $servers[$range] = $value['host'];
 }
 foreach ($dataAsn32 as $range => $value) {
-    if (!isset($value['host'])) {
+    if (!isset($value['host']) || '' === $value['host']) {
         continue;
     }
     $range = \str_replace(' ', '-', $range);

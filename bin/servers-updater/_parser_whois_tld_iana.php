@@ -25,7 +25,6 @@ foreach ($matches as $match) {
     echo 'Load "'.$tld.'" domain page...'.\PHP_EOL;
     $domainPage = \request($fp, $host.$urlPage);
 
-    $matchesPageRdap = [];
     $matchesPageWhois = [];
     \preg_match('/<b>WHOIS Server:<\/b>(.+)<br>/', $domainPage, $matchesPageWhois);
     $server = isset($matchesPageWhois[1]) ? \trim($matchesPageWhois[1]) : null;

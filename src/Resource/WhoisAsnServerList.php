@@ -2041,7 +2041,6 @@ class WhoisAsnServerList implements AsnServerListInterface
             '23384-23415' => 'whois.arin.net',
             '23416' => 'whois.lacnic.net',
             '23417-23455' => 'whois.arin.net',
-            '23456' => '',
             '23457-23486' => 'whois.arin.net',
             '23487-23488' => 'whois.lacnic.net',
             '23489-23494' => 'whois.arin.net',

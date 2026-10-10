@@ -21,21 +21,13 @@ $servers = [];
 foreach ($matches as $match) {
     $urlPage = $match[1];
     $tld = $match[2];
-    if (isset($ianaServers[$tld])) {
-        echo 'Skip "'.$tld.'" domain page, exists on IANA data...'.\PHP_EOL;
-        continue;
-    }
-    if (isset($webposServers[$tld])) {
-        echo 'Skip "'.$tld.'" domain page, exists on webpos data...'.\PHP_EOL;
-        continue;
-    }
 
     echo 'Load "'.$tld.'" domain page...'.\PHP_EOL;
     $domainPage = \request($fp, $host.$urlPage);
 
     $matchesPage = [];
     \preg_match('/<tr><td>WHOIS Server: <\/td><td>(.+)<\/td><\/tr>/', $domainPage, $matchesPage);
-    if (!$matches) {
+    if (!$matchesPage) {
         throw new RuntimeException('Failed to parse '.$host.$urlPage);
     }
 

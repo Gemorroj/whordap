@@ -15,7 +15,7 @@ $data = \json_decode($json, true, 10, \JSON_THROW_ON_ERROR);
 echo 'Start scan IPv6...'.\PHP_EOL;
 $servers = [];
 foreach ($data as $ip => $value) {
-    if (!isset($value['host']) || 'teredo' === $value['host'] || '6to4' === $value['host']) {
+    if (!isset($value['host']) || '' === $value['host'] || 'teredo' === $value['host'] || '6to4' === $value['host']) {
         continue;
     }
 
