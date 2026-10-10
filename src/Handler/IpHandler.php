@@ -79,13 +79,25 @@ final readonly class IpHandler implements HandlerInterface
 
     private function findIpv4Server(string $ip): ?string
     {
+        $address = \ip2long($ip);
+        if (false === $address) {
+            return null;
+        }
+
         foreach ($this->serverList->serversIpv4 as $ipv4Cidr => $server) {
             $parts = \explode('/', $ipv4Cidr, 2);
             $subnet = $parts[0];
             $mask = (int) ($parts[1] ?? 32);
 
-            $address = \ip2long($ip);
             $subnetAddress = \ip2long($subnet);
+            if (false === $subnetAddress) {
+                continue;
+            }
+
+            if (0 === $mask) {
+                return $server;
+            }
+
             $mask = -1 << (32 - $mask);
             $subnetAddress &= $mask; // nb: in case the supplied subnet wasn't correctly aligned
             $match = ($address & $mask) === $subnetAddress;
@@ -99,13 +111,24 @@ final readonly class IpHandler implements HandlerInterface
 
     private function findIpv6Server(string $ip): ?string
     {
+        $addr = \inet_pton($ip);
+        if (false === $addr) {
+            return null;
+        }
+
         foreach ($this->serverList->serversIpv6 as $ipv6Cidr => $server) {
             $parts = \explode('/', $ipv6Cidr, 2);
             $subnet = $parts[0];
             $mask = (int) ($parts[1] ?? 128);
 
             $subnet = \inet_pton($subnet);
-            $addr = \inet_pton($ip);
+            if (false === $subnet) {
+                continue;
+            }
+
+            if (0 === $mask) {
+                return $server;
+            }
 
             $binMask = \str_repeat('f', \intdiv($mask, 4));
             switch ($mask % 4) {

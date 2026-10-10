@@ -21,8 +21,6 @@ foreach ($dataIpv6['services'] as $value) {
     }
 }
 echo 'End scan IPv6.'.\PHP_EOL;
-echo 'Disconnect from '.$host.'...'.\PHP_EOL;
-\disconnect($fp);
 echo \PHP_EOL;
 
 return $servers;

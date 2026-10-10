@@ -21,8 +21,6 @@ foreach ($dataAsn['services'] as $value) {
     }
 }
 echo 'End scan ASN.'.\PHP_EOL;
-echo 'Disconnect from '.$host.'...'.\PHP_EOL;
-\disconnect($fp);
 echo \PHP_EOL;
 
 return $servers;

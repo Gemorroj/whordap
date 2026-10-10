@@ -101,16 +101,11 @@ final readonly class WhoRdap
 
     private function isAsn(string $query): bool
     {
-        $hasAsPrefix = false !== \stripos($query, 'AS');
-        if ($hasAsPrefix) {
+        if (\str_starts_with(\strtoupper($query), 'AS')) {
             $query = \substr($query, 2);
         }
 
-        if (\preg_match('/^\d+$/', $query)) {
-            return true;
-        }
-
-        return false;
+        return 1 === \preg_match('/^\d+$/', $query);
     }
 
     private function isIp(string $query): bool

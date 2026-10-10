@@ -49,8 +49,6 @@ foreach ($matches as $match) {
     $servers[$tld] = $server;
 }
 echo 'End scan domains.'.\PHP_EOL;
-echo 'Disconnect from '.$host.'...'.\PHP_EOL;
-\disconnect($fp);
 echo \PHP_EOL;
 
 return $servers;

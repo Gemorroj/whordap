@@ -29,11 +29,6 @@ function request(CurlHandle &$fp, string $url): string
     return $result;
 }
 
-function disconnect(CurlHandle $fp): void
-{
-    \curl_close($fp);
-}
-
 /**
  * @param array<string, string> $servers
  *

@@ -62,7 +62,7 @@ final readonly class AsnHandler implements HandlerInterface
 
     private function findAsnServer(string $query): string
     {
-        $hasAsPrefix = false !== \stripos($query, 'AS');
+        $hasAsPrefix = \str_starts_with(\strtoupper($query), 'AS');
         $number = $hasAsPrefix ? \substr($query, 2) : $query;
         $number = (int) $number;
 
@@ -84,12 +84,12 @@ final readonly class AsnHandler implements HandlerInterface
     private function prepareWhoisServerQuery(string $server, string $query): string
     {
         if (\in_array($server, ['whois.arin.net', 'whois.arin.net:43'], true)) {
-            $hasAsPrefix = false !== \stripos($query, 'AS');
+            $hasAsPrefix = \str_starts_with(\strtoupper($query), 'AS');
 
             return $hasAsPrefix ? 'z '.\substr($query, 2) : 'z '.$query;
         }
         if (\in_array($server, ['whois.afrinic.net', 'whois.afrinic.net:43', 'whois.apnic.net', 'whois.apnic.net:43', 'whois.ripe.net', 'whois.ripe.net:43'], true)) {
-            $hasAsPrefix = false !== \stripos($query, 'AS');
+            $hasAsPrefix = \str_starts_with(\strtoupper($query), 'AS');
 
             return $hasAsPrefix ? $query : 'AS'.$query;
         }
@@ -99,7 +99,7 @@ final readonly class AsnHandler implements HandlerInterface
 
     private function prepareRdapServerQuery(string $server, string $query): string
     {
-        $hasAsPrefix = false !== \stripos($query, 'AS');
+        $hasAsPrefix = \str_starts_with(\strtoupper($query), 'AS');
 
         return '/autnum/'.($hasAsPrefix ? \substr($query, 2) : $query);
     }

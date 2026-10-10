@@ -1,0 +1,53 @@
+#
+# ARIN WHOIS data and services are subject to the Terms of Use
+# available at: https://www.arin.net/resources/registry/whois/tou/
+#
+# If you see inaccuracies in the results, please report at
+# https://www.arin.net/resources/registry/whois/inaccuracy_reporting/
+#
+# Copyright 1997-2026, American Registry for Internet Numbers, Ltd.
+#
+
+
+ASNumber:       220
+ASName:         OOALC-HOSTNET-AS
+ASHandle:       AS220
+RegDate:        1988-08-12
+Updated:        2008-08-18
+Ref:            https://rdap.arin.net/registry/autnum/220
+
+
+OrgName:        Air Force Systems Networking
+OrgId:          7ESG
+Address:        501 EAST MOORE DR. BLDG 884 RM 1100 GUNTHER ANNEX
+City:           MAXWELL AFB
+StateProv:      AL
+PostalCode:     36114
+Country:        US
+RegDate:        2008-06-05
+Updated:        2026-08-12
+Ref:            https://rdap.arin.net/registry/entity/7ESG
+
+
+OrgTechHandle: REGIS10-ARIN
+OrgTechName:   Registration
+OrgTechPhone:  +1-844-347-2457 
+OrgTechEmail:  user@example.com
+OrgTechRef:    https://rdap.arin.net/registry/entity/REGIS10-ARIN
+
+OrgAbuseHandle: REGIS10-ARIN
+OrgAbuseName:   Registration
+OrgAbusePhone:  +1-844-347-2457 
+OrgAbuseEmail:  user@example.com
+OrgAbuseRef:    https://rdap.arin.net/registry/entity/REGIS10-ARIN
+
+
+#
+# ARIN WHOIS data and services are subject to the Terms of Use
+# available at: https://www.arin.net/resources/registry/whois/tou/
+#
+# If you see inaccuracies in the results, please report at
+# https://www.arin.net/resources/registry/whois/inaccuracy_reporting/
+#
+# Copyright 1997-2026, American Registry for Internet Numbers, Ltd.
+#

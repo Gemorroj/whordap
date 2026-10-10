@@ -1,0 +1,53 @@
+Domain Name: VK.COM
+Registry Domain ID: 3206186_DOMAIN_COM-VRSN
+Registrar WHOIS Server: whois.nic.ru
+Registrar URL: https://www.nic.ru
+Updated Date: 2024-01-30T17:11:22Z
+Creation Date: 1997-06-24T04:00:00Z
+Registrar Registration Expiration Date: 2027-06-22T21:00:00Z
+Registrar: Regional Network Information Center, JSC dba RU-CENTER
+Registrar IANA ID: 463
+Registrar Abuse Contact Email: user@example.com
+Registrar Abuse Contact Phone: +74959944601
+Domain Status: clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+Registry Registrant ID:
+Registrant Name: Privacy protection service - whoisproxy.ru
+Registrant Organization: Privacy protection service - whoisproxy.ru
+Registrant Street: PO box 99, whoisproxy.ru
+Registrant City: Moscow
+Registrant State/Province: Moscow
+Registrant Postal Code: 123308
+Registrant Country: RU
+Registrant Phone: +7.4957856536
+Registrant Phone Ext:
+Registrant Email: user@example.com
+Registry Admin ID:
+Admin Name: Privacy protection service - whoisproxy.ru
+Admin Organization: Privacy protection service - whoisproxy.ru
+Admin Street: PO box 99, whoisproxy.ru
+Admin City: Moscow
+Admin State/Province: Moscow
+Admin Postal Code: 123308
+Admin Country: RU
+Admin Phone: +7.4957856536
+Admin Phone Ext:
+Admin Email: user@example.com
+Registry Tech ID:
+Tech Name: Privacy protection service - whoisproxy.ru
+Tech Organization: Privacy protection service - whoisproxy.ru
+Tech Street: PO box 99, whoisproxy.ru
+Tech City: Moscow
+Tech State/Province: Moscow
+Tech Postal Code: 123308
+Tech Country: RU
+Tech Phone: +7.4957856536
+Tech Phone Ext:
+Tech Email: user@example.com
+Name Server: ns1.vk.com 87.240.131.131
+Name Server: ns2.vk.com 95.213.21.21
+Name Server: ns3.vk.com 93.186.238.238
+Name Server: ns4.vk.com 87.240.136.136
+DNSSEC: unsigned
+URL of the ICANN WHOIS Data Problem Reporting System: http://wdprs.internic.net/
+For more information on Whois status codes, please visit: https://icann.org/epp
+>>> Last update of WHOIS database: 2026.10.10T22:20:31Z <<<

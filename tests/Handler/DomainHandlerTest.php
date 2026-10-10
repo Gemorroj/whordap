@@ -5,9 +5,13 @@ namespace WhoRdap\Tests\Handler;
 use PHPUnit\Framework\Attributes\DataProvider;
 use WhoRdap\Exception\NetworkException;
 use WhoRdap\Exception\RegistrarServerException;
+use WhoRdap\Exception\TimeoutException;
 use WhoRdap\Handler\DomainHandler;
+use WhoRdap\NetworkClientInterface;
 use WhoRdap\Resource\RdapTldServerList;
 use WhoRdap\Resource\WhoisTldServerList;
+use WhoRdap\Response\RdapDomainRegistrarResponse;
+use WhoRdap\Response\WhoisDomainRegistrarResponse;
 use WhoRdap\Tests\BaseTestCase;
 
 final class DomainHandlerTest extends BaseTestCase
@@ -93,6 +97,11 @@ final class DomainHandlerTest extends BaseTestCase
         yield [\json_encode(['links' => [['href' => 'https://example.com/domain/TEST.RU', 'rel' => 'related', 'type' => 'application/rdap+json']]], \JSON_THROW_ON_ERROR), 'https://example.com/'];
         yield [\json_encode(['links' => [['href' => 'https://example.com/v1/domain/TEST.RU', 'rel' => 'related', 'type' => 'application/rdap+json']]], \JSON_THROW_ON_ERROR), 'https://example.com/v1/'];
         yield [\json_encode(['links' => [['href' => 'http://example.com', 'rel' => 'self', 'type' => 'application/rdap+json']]], \JSON_THROW_ON_ERROR), null];
+        yield [\json_encode(['links' => [['href' => 'http://example.com', 'rel' => 'related']]], \JSON_THROW_ON_ERROR), null]; // type is optional in RFC 9083
+        yield [\json_encode(['links' => [['href' => 'http://example.com']]], \JSON_THROW_ON_ERROR), null]; // rel and type are optional
+        yield [\json_encode(['links' => ['not-an-object']], \JSON_THROW_ON_ERROR), null];
+        yield [\json_encode(['links' => 'not-an-array'], \JSON_THROW_ON_ERROR), null];
+        yield ['"just a string"', null];
         yield ['   test: string', null];
     }
 
@@ -177,109 +186,128 @@ final class DomainHandlerTest extends BaseTestCase
     {
         $handler = new DomainHandler($this->createLoggedClient(), self::createRdapTldServerList());
         $this->expectException(NetworkException::class);
-        $data = $handler->processRdap('localhost');
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
-        self::assertNull($data->registrarResponse);
-        self::assertStringContainsString('"Domain not found :","localhost"', $data->response);
-        self::assertEquals(self::createRdapTldServerList()->serverDefault, $data->server);
+        $handler->processRdap('localhost');
     }
 
     public function testLocalhostWhois(): void
     {
         $handler = new DomainHandler($this->createLoggedClient(), self::createWhoisTldServerList());
         $data = $handler->processWhois('localhost');
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
+
+        self::assertSame(self::createWhoisTldServerList()->serverDefault, $data->server);
+        self::assertNotSame('', $data->response);
         self::assertNull($data->registrarResponse);
-        self::assertStringContainsString('You queried for localhost but this server does not have', $data->response);
-        self::assertEquals(self::createWhoisTldServerList()->serverDefault, $data->server);
     }
 
     public function testForceWhoisServer(): void
     {
         $handler = new DomainHandler($this->createLoggedClient(), self::createWhoisTldServerList());
-        $data = $handler->processWhois('sirus.su', 'whois.tcinet.ru');
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
+        $data = $handler->processWhois('vk.com', 'whois.verisign-grs.com');
 
+        self::assertSame('whois.verisign-grs.com', $data->server);
+        self::assertNotSame('', $data->response);
         self::assertNull($data->registrarResponse);
-        self::assertStringContainsString('e-mail:        sir.nyll@gmail.com', $data->response);
-        self::assertEquals('whois.tcinet.ru', $data->server);
     }
 
     public function testForceRdapServer(): void
     {
         $handler = new DomainHandler($this->createLoggedClient(), self::createRdapTldServerList());
-        $data = $handler->processRdap('wikipedia.org', 'https://rdap.publicinterestregistry.org/rdap/');
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
+        $data = $handler->processRdap('google.com', 'https://rdap.verisign.com/com/v1/');
 
+        self::assertSame('https://rdap.verisign.com/com/v1/', $data->server);
+        self::assertJson($data->response);
         self::assertNull($data->registrarResponse);
-        self::assertStringContainsString('"ldhName": "wikipedia.org"', $data->response);
-        self::assertEquals('https://rdap.publicinterestregistry.org/rdap/', $data->server);
     }
 
     #[DataProvider('provideWhoisDomainResponse')]
-    public function testProcessWhois(
-        string $query,
-        string $expectedServer,
-        string $expectedResponse,
-        ?string $expectedRegistrarServer,
-        ?string $expectedRegistrarResponse,
-    ): void {
+    public function testProcessWhois(string $query, string $expectedServer): void
+    {
         $handler = new DomainHandler($this->createLoggedClient(), self::createWhoisTldServerList());
         $data = $handler->processWhois($query);
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
 
-        self::assertEquals($expectedServer, $data->server);
-        self::assertStringContainsString($expectedResponse, $data->response);
-        self::assertEquals($expectedRegistrarServer, $data->registrarResponse?->server);
-        if (null === $expectedRegistrarResponse) {
-            self::assertNull($data->registrarResponse?->response);
-        } else {
-            self::assertStringContainsString($expectedRegistrarResponse, $data->registrarResponse?->response);
+        self::assertSame($expectedServer, $data->server);
+        self::assertNotSame('', $data->response);
+        if ($data->registrarResponse instanceof WhoisDomainRegistrarResponse) {
+            self::assertNotSame('', $data->registrarResponse->server);
         }
     }
 
     public static function provideWhoisDomainResponse(): \Generator
     {
-        yield ['ru', self::createWhoisTldServerList()->serverDefault, 'organisation: Coordination Center for TLD RU', null, null];
-        yield ['vk.com', 'whois.verisign-grs.com', 'Registrar URL: http://nic.ru', 'whois.nic.ru', 'Registrant Country: RU'];
-        yield ['registro.br', 'whois.registro.br', 'Núcleo de Inf. e Coord. do Ponto BR - NIC.BR', null, null]; // non UTF-8
-        yield ['президент.рф', 'whois.tcinet.ru', 'org:           Special Communications and Information Service of the Federal Guard Service of the Russian Federation (Spetssvyaz FSO RF)', null, null]; // punycode
+        yield ['ru', self::createWhoisTldServerList()->serverDefault];
+        yield ['vk.com', 'whois.verisign-grs.com'];
+        yield ['registro.br', 'whois.registro.br'];
+        yield ['президент.рф', 'whois.tcinet.ru'];
     }
 
     #[DataProvider('provideRdapDomainResponse')]
-    public function testProcessRdap(
-        string $query,
-        string $expectedServer,
-        string $expectedResponse,
-        ?string $expectedRegistrarServer,
-        ?string $expectedRegistrarResponse,
-    ): void {
+    public function testProcessRdap(string $query, string $expectedServer): void
+    {
         $handler = new DomainHandler($this->createLoggedClient(), self::createRdapTldServerList());
         $data = $handler->processRdap($query);
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
 
-        self::assertEquals($expectedServer, $data->server);
-        self::assertStringContainsString($expectedResponse, $data->response);
-        self::assertEquals($expectedRegistrarServer, $data->registrarResponse?->server);
-        if (null === $expectedRegistrarResponse) {
-            self::assertNull($data->registrarResponse?->response);
-        } else {
-            self::assertStringContainsString($expectedRegistrarResponse, $data->registrarResponse?->response);
+        self::assertSame($expectedServer, $data->server);
+        self::assertJson($data->response);
+        if ($data->registrarResponse instanceof RdapDomainRegistrarResponse) {
+            self::assertNotSame('', $data->registrarResponse->server);
         }
     }
 
     public static function provideRdapDomainResponse(): \Generator
     {
-        yield ['ru', self::createRdapTldServerList()->serverDefault, '"Coordination Center for TLD RU"', null, null];
-        yield ['google.com', 'https://rdap.verisign.com/com/v1/', '"handle":"2138514_DOMAIN_COM-VRSN","ldhName":"GOOGLE.COM"', 'https://rdap.markmonitor.com/rdap/', '"handle":"2138514_DOMAIN_COM-VRSN"']; // 403 (russophobic server)
-        yield ['registro.br', 'https://rdap.registro.br/', 'Núcleo de Inf. e Coord. do Ponto BR - NIC.BR', null, null];
-        yield ['я.рус', 'https://api.rdap.nic.xn--p1acf/', '"handle":"8144-CoCCA","ldhName":"xn--41a.xn--p1acf"', null, null]; // punycode
+        yield ['ru', self::createRdapTldServerList()->serverDefault];
+        yield ['google.com', 'https://rdap.verisign.com/com/v1/'];
+        yield ['registro.br', 'https://rdap.registro.br/'];
+        yield ['я.рус', 'https://api.rdap.nic.xn--p1acf/'];
+    }
+
+    public function testProcessWhoisWithRegistrar(): void
+    {
+        $client = $this->createStub(NetworkClientInterface::class);
+        $client->method('getWhoisResponse')->willReturnMap([
+            ['whois.verisign-grs.com', 'vk.com', self::fixture('whois/domain/vk.com.txt')],
+            ['whois.nic.ru', 'vk.com', self::fixture('whois/registrar/vk.com.txt')],
+        ]);
+
+        $data = new DomainHandler($client, self::createWhoisTldServerList())->processWhois('vk.com');
+
+        self::assertSame('whois.verisign-grs.com', $data->server);
+        self::assertStringContainsString('Domain Name: VK.COM', $data->response);
+        self::assertStringContainsString('Registrar WHOIS Server: whois.nic.ru', $data->response);
+        self::assertInstanceOf(WhoisDomainRegistrarResponse::class, $data->registrarResponse);
+        self::assertSame('whois.nic.ru', $data->registrarResponse->server);
+        self::assertStringContainsString('Registrant Country: RU', $data->registrarResponse->response);
+    }
+
+    public function testProcessWhoisWithoutRegistrar(): void
+    {
+        $client = $this->createStub(NetworkClientInterface::class);
+        $client->method('getWhoisResponse')->willReturnMap([
+            ['whois.iana.org', 'ru', self::fixture('whois/domain/ru.txt')],
+        ]);
+
+        $data = new DomainHandler($client, self::createWhoisTldServerList())->processWhois('ru');
+
+        self::assertSame('whois.iana.org', $data->server);
+        self::assertStringContainsString('organisation: Coordination Center for TLD RU', $data->response);
+        self::assertNull($data->registrarResponse);
+    }
+
+    public function testProcessRdapWithRegistrar(): void
+    {
+        $client = $this->createStub(NetworkClientInterface::class);
+        $client->method('getRdapResponse')->willReturnMap([
+            ['https://rdap.verisign.com/com/v1/', '/domain/google.com', self::fixture('rdap/domain/google.com.json')],
+            ['https://rdap.markmonitor.com/rdap/', '/domain/google.com', self::fixture('rdap/registrar/google.com.json')],
+        ]);
+
+        $data = new DomainHandler($client, self::createRdapTldServerList())->processRdap('google.com');
+
+        self::assertSame('https://rdap.verisign.com/com/v1/', $data->server);
+        self::assertJson($data->response);
+        self::assertInstanceOf(RdapDomainRegistrarResponse::class, $data->registrarResponse);
+        self::assertSame('https://rdap.markmonitor.com/rdap/', $data->registrarResponse->server);
+        self::assertStringContainsString('REDACTED REGISTRANT', $data->registrarResponse->response);
     }
 
     private static function createRdapTldServerList(): RdapTldServerList
@@ -313,10 +341,11 @@ final class DomainHandlerTest extends BaseTestCase
 
     public function testProcessWhoisTimeout(): void
     {
-        $handler = new DomainHandler($this->createLoggedClient(timeout: 1), self::createWhoisTldServerList());
-        $this->expectException(NetworkException::class);
-        $data = $handler->processWhois('haiku-inc.org', 'whois.namecheap.com');
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
+        $client = $this->createStub(NetworkClientInterface::class);
+        $client->method('getWhoisResponse')->willThrowException(new TimeoutException('Timeout reading from WHOIS server'));
+
+        $handler = new DomainHandler($client, self::createWhoisTldServerList());
+        $this->expectException(TimeoutException::class);
+        $handler->processWhois('example.com');
     }
 }

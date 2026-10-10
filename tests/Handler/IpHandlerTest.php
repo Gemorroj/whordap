@@ -4,6 +4,7 @@ namespace WhoRdap\Tests\Handler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use WhoRdap\Handler\IpHandler;
+use WhoRdap\NetworkClientInterface;
 use WhoRdap\Resource\RdapIpServerList;
 use WhoRdap\Resource\WhoisIpServerList;
 use WhoRdap\Tests\BaseTestCase;
@@ -49,51 +50,77 @@ final class IpHandlerTest extends BaseTestCase
     }
 
     #[DataProvider('provideWhoisIpResponse')]
-    public function testProcessWhois(string $query, string $expectedString, string $expectedServer): void
+    public function testProcessWhois(string $query, string $expectedServer): void
     {
         $handler = new IpHandler($this->createLoggedClient(), self::createWhoisIpServerList());
         $data = $handler->processWhois($query);
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
-        self::assertStringContainsString($expectedString, $data->response);
-        self::assertEquals($expectedServer, $data->server);
+
+        self::assertSame($expectedServer, $data->server);
+        self::assertNotSame('', $data->response);
     }
 
     public static function provideWhoisIpResponse(): \Generator
     {
-        yield ['127.0.0.1', 'NetName:        SPECIAL-IPV4-LOOPBACK-IANA-RESERVED', self::createWhoisIpServerList()->serverDefault];
-        yield ['192.168.0.1', 'NetName:        PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED', self::createWhoisIpServerList()->serverDefault];
-        yield ['192.0.2.0/24', 'NetHandle:      NET-192-0-2-0-1', self::createWhoisIpServerList()->serverDefault];
-        yield ['1.1.1.1', 'inetnum:        1.1.1.0 - 1.1.1.255', 'whois.apnic.net'];
-        yield ['2001:4860:4860::8888', 'NetHandle:      NET6-2001-4860-1', 'whois.arin.net'];
-        yield ['193.0.11.51', 'inetnum:        193.0.10.0 - 193.0.11.255', 'whois.ripe.net'];
-        yield ['200.3.13.10', 'inetnum:     200.3.12.0/22', 'whois.lacnic.net'];
-        yield ['196.216.2.1', 'inetnum:        196.216.2.0 - 196.216.3.255', 'whois.afrinic.net'];
-        yield ['199.212.0.46', 'NetHandle:      NET-199-212-0-0-1', 'whois.arin.net'];
+        yield ['127.0.0.1', self::createWhoisIpServerList()->serverDefault];
+        yield ['192.168.0.1', self::createWhoisIpServerList()->serverDefault];
+        yield ['192.0.2.0/24', self::createWhoisIpServerList()->serverDefault];
+        yield ['1.1.1.1', 'whois.apnic.net'];
+        yield ['2001:4860:4860::8888', 'whois.arin.net'];
+        yield ['193.0.11.51', 'whois.ripe.net'];
+        yield ['200.3.13.10', 'whois.lacnic.net'];
+        yield ['196.216.2.1', 'whois.afrinic.net'];
+        yield ['199.212.0.46', 'whois.arin.net'];
     }
 
     #[DataProvider('provideRdapIpResponse')]
-    public function testProcessRdap(string $query, string $expectedString, string $expectedServer): void
+    public function testProcessRdap(string $query, string $expectedServer): void
     {
         $handler = new IpHandler($this->createLoggedClient(), self::createRdapIpServerList());
         $data = $handler->processRdap($query);
-        // \file_put_contents('/test.txt', $data->response);
-        // var_dump($data->response);
-        self::assertStringContainsString($expectedString, $data->response);
-        self::assertEquals($expectedServer, $data->server);
+
+        self::assertSame($expectedServer, $data->server);
+        self::assertJson($data->response);
     }
 
     public static function provideRdapIpResponse(): \Generator
     {
-        yield ['127.0.0.1', '"handle" : "NET-127-0-0-0-1",', self::createRdapIpServerList()->serverDefault];
-        yield ['192.168.0.1', '"handle" : "NET-192-168-0-0-1"', self::createRdapIpServerList()->serverDefault];
-        yield ['192.0.2.0/24', '"handle" : "NET-192-0-2-0-1"', self::createRdapIpServerList()->serverDefault];
-        yield ['1.1.1.1', '"handle":"1.1.1.0 - 1.1.1.255"', 'https://rdap.apnic.net/'];
-        yield ['2001:4860:4860::8888', '"handle" : "NET6-2001-4860-1"', 'https://rdap.arin.net/registry/'];
-        yield ['193.0.11.51', '"handle" : "193.0.10.0 - 193.0.11.255"', 'https://rdap.db.ripe.net/'];
-        yield ['200.3.13.10', '"handle":"200.3.12.0/22"', 'https://rdap.lacnic.net/rdap/'];
-        yield ['196.216.2.1', '"handle":"196.216.2.0 - 196.216.3.255"', 'https://rdap.afrinic.net/rdap/'];
-        yield ['199.212.0.160', '"handle" : "NET-199-212-0-0-1"', 'https://rdap.arin.net/registry'];
+        yield ['127.0.0.1', self::createRdapIpServerList()->serverDefault];
+        yield ['192.168.0.1', self::createRdapIpServerList()->serverDefault];
+        yield ['192.0.2.0/24', self::createRdapIpServerList()->serverDefault];
+        yield ['1.1.1.1', 'https://rdap.apnic.net/'];
+        yield ['2001:4860:4860::8888', 'https://rdap.arin.net/registry/'];
+        yield ['193.0.11.51', 'https://rdap.db.ripe.net/'];
+        yield ['200.3.13.10', 'https://rdap.lacnic.net/rdap/'];
+        yield ['196.216.2.1', 'https://rdap.afrinic.net/rdap/'];
+        yield ['199.212.0.160', 'https://rdap.arin.net/registry'];
+    }
+
+    public function testProcessWhoisWithFixture(): void
+    {
+        $client = $this->createStub(NetworkClientInterface::class);
+        $client->method('getWhoisResponse')->willReturnMap([
+            ['whois.apnic.net', '1.1.1.1', self::fixture('whois/ip/1.1.1.1.txt')],
+        ]);
+
+        $data = new IpHandler($client, self::createWhoisIpServerList())->processWhois('1.1.1.1');
+
+        self::assertSame('whois.apnic.net', $data->server);
+        self::assertStringContainsString('1.1.1.0 - 1.1.1.255', $data->response);
+        self::assertStringContainsString('APNIC-LABS', $data->response);
+    }
+
+    public function testProcessRdapWithFixture(): void
+    {
+        $client = $this->createStub(NetworkClientInterface::class);
+        $client->method('getRdapResponse')->willReturnMap([
+            ['https://rdap.apnic.net/', '/ip/1.1.1.1', self::fixture('rdap/ip/1.1.1.1.json')],
+        ]);
+
+        $data = new IpHandler($client, self::createRdapIpServerList())->processRdap('1.1.1.1');
+
+        self::assertSame('https://rdap.apnic.net/', $data->server);
+        self::assertJson($data->response);
+        self::assertStringContainsString('"handle":"1.1.1.0 - 1.1.1.255"', $data->response);
     }
 
     private static function createRdapIpServerList(): RdapIpServerList

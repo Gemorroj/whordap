@@ -21,8 +21,6 @@ foreach ($jsonTld['services'] as $value) {
     }
 }
 echo 'End scan TLD.'.\PHP_EOL;
-echo 'Disconnect from '.$host.'...'.\PHP_EOL;
-\disconnect($fp);
 echo \PHP_EOL;
 
 return $servers;

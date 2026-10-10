@@ -161,9 +161,21 @@ final readonly class DomainHandler implements HandlerInterface
 
         // https://rdap.verisign.com/com/v1/domain/vk.com
         // https://datatracker.ietf.org/doc/html/rfc9083#name-links
+        if (!\is_array($json)) {
+            return null;
+        }
+
         $links = $json['links'] ?? [];
+        if (!\is_array($links)) {
+            return null;
+        }
+
         foreach ($links as $link) {
-            if ($link['href'] && 'related' === $link['rel'] && 'application/rdap+json' === $link['type']) {
+            if (!\is_array($link) || !isset($link['href'])) {
+                continue;
+            }
+
+            if ('related' === ($link['rel'] ?? null) && 'application/rdap+json' === ($link['type'] ?? null)) {
                 $href = \strtolower($link['href']);
                 $posDomain = \strpos($href, '/domain/');
                 if (false !== $posDomain) {

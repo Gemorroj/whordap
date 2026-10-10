@@ -1,0 +1,107 @@
+{
+  "endAutnum" : 220,
+  "entities" : [ {
+    "entities" : [ {
+      "events" : [ {
+        "eventAction" : "last changed",
+        "eventDate" : "2026-02-12T13:52:28-05:00"
+      }, {
+        "eventAction" : "registration",
+        "eventDate" : "2009-06-24T09:41:15-04:00"
+      } ],
+      "handle" : "REGIS10-ARIN",
+      "links" : [ {
+        "href" : "https://rdap.arin.net/registry/entity/REGIS10-ARIN",
+        "rel" : "self",
+        "type" : "application/rdap+json",
+        "value" : "https://rdap.arin.net/registry/autnum/220"
+      }, {
+        "href" : "https://whois.arin.net/rest/poc/REGIS10-ARIN",
+        "rel" : "alternate",
+        "type" : "application/xml",
+        "value" : "https://rdap.arin.net/registry/autnum/220"
+      } ],
+      "objectClassName" : "entity",
+      "port43" : "whois.arin.net",
+      "roles" : [ "technical", "abuse", "administrative" ],
+      "status" : [ "validated" ],
+      "vcardArray" : [ "vcard", [ [ "version", { }, "text", "4.0" ], [ "adr", {
+        "label" : "DISA-Columbus\n300 North James Road\nWhitehall\nOH\n43213\nUnited States"
+      }, "text", [ "", "", "", "", "", "", "" ] ], [ "fn", { }, "text", "Registration" ], [ "org", { }, "text", "DoD Network Information Center" ], [ "kind", { }, "text", "group" ], [ "email", { }, "text", "user@example.com" ], [ "tel", {
+        "type" : [ "work", "voice" ]
+      }, "text", "+1-844-347-2457;ext2" ] ] ]
+    } ],
+    "events" : [ {
+      "eventAction" : "last changed",
+      "eventDate" : "2026-08-12T11:30:15-04:00"
+    }, {
+      "eventAction" : "registration",
+      "eventDate" : "2008-06-05T10:28:10-04:00"
+    } ],
+    "handle" : "7ESG",
+    "links" : [ {
+      "href" : "https://rdap.arin.net/registry/entity/7ESG",
+      "rel" : "self",
+      "type" : "application/rdap+json",
+      "value" : "https://rdap.arin.net/registry/autnum/220"
+    }, {
+      "href" : "https://whois.arin.net/rest/org/7ESG",
+      "rel" : "alternate",
+      "type" : "application/xml",
+      "value" : "https://rdap.arin.net/registry/autnum/220"
+    } ],
+    "objectClassName" : "entity",
+    "port43" : "whois.arin.net",
+    "roles" : [ "registrant" ],
+    "vcardArray" : [ "vcard", [ [ "version", { }, "text", "4.0" ], [ "fn", { }, "text", "Air Force Systems Networking" ], [ "adr", {
+      "label" : "501 EAST MOORE DR. BLDG 884 RM 1100 GUNTHER ANNEX\nMAXWELL AFB\nAL\n36114\nUnited States"
+    }, "text", [ "", "", "", "", "", "", "" ] ], [ "kind", { }, "text", "org" ] ] ]
+  } ],
+  "events" : [ {
+    "eventAction" : "last changed",
+    "eventDate" : "2008-08-18T12:11:24-04:00"
+  }, {
+    "eventAction" : "registration",
+    "eventDate" : "1988-08-12T00:00:00-04:00"
+  } ],
+  "handle" : "AS220",
+  "links" : [ {
+    "href" : "https://rdap.arin.net/registry/autnum/220",
+    "rel" : "self",
+    "type" : "application/rdap+json",
+    "value" : "https://rdap.arin.net/registry/autnum/220"
+  }, {
+    "href" : "https://whois.arin.net/rest/asn/AS220",
+    "rel" : "alternate",
+    "type" : "application/xml",
+    "value" : "https://rdap.arin.net/registry/autnum/220"
+  } ],
+  "name" : "OOALC-HOSTNET-AS",
+  "notices" : [ {
+    "description" : [ "By using the ARIN RDAP/Whois service, you are agreeing to the RDAP/Whois Terms of Use" ],
+    "links" : [ {
+      "href" : "https://www.arin.net/resources/registry/whois/tou/",
+      "rel" : "terms-of-service",
+      "type" : "text/html",
+      "value" : "https://rdap.arin.net/registry/autnum/220"
+    } ],
+    "title" : "Terms of Service"
+  }, {
+    "description" : [ "If you see inaccuracies in the results, please visit: " ],
+    "links" : [ {
+      "href" : "https://www.arin.net/resources/registry/whois/inaccuracy_reporting/",
+      "rel" : "inaccuracy-report",
+      "type" : "text/html",
+      "value" : "https://rdap.arin.net/registry/autnum/220"
+    } ],
+    "title" : "Whois Inaccuracy Reporting"
+  }, {
+    "description" : [ "Copyright 1997-2026, American Registry for Internet Numbers, Ltd." ],
+    "title" : "Copyright Notice"
+  } ],
+  "objectClassName" : "autnum",
+  "port43" : "whois.arin.net",
+  "rdapConformance" : [ "nro_rdap_profile_0", "rdap_level_0", "nro_rdap_profile_asn_flat_0" ],
+  "startAutnum" : 220,
+  "status" : [ "active" ]
+}
