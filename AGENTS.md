@@ -16,6 +16,10 @@ vendor/bin/php-cs-fixer fix
 vendor/bin/phpstan analyse
 ```
 
+## Conventions
+
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
+
 ## Rules
 
 - Follow PHP-CS-Fixer ruleset from `.php-cs-fixer.dist.php` (@Symfony, @PHP8x4Migration).
